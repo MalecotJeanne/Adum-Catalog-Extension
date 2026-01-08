@@ -109,8 +109,12 @@ async function start() {
 
     injectDiv(newFormations);
     
-    browser.runtime.sendMessage({ type: "saveFormations", formations });
-
+    try {
+        await browser.storage.local.set({ formations: formations });
+        console.log(`Formations saved.`);
+    } catch (err) {
+        console.error("Failed to save formations:", err);
+    }
 
 }
 

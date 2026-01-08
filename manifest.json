@@ -27,10 +27,6 @@
     }
   ],
 
-  "background": {
-    "service_worker": "background.js"
-  },
-
   "browser_specific_settings": {
     "gecko": {
       "id": "catalog@example.com"
