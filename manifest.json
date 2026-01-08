@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "AdumCatalogUpdates",
+  "version": "1.0",
+  "author": "Jeanne Malécot",
+  "homepage_url": "https://github.com/yourusername/AdumCatalogUpdates",
+
+  "description": "Ajoute une section au catalogue avec les liens des formations ajoutées depuis la dernière visite.",
+
+  "icons": {
+    "48": "icons/icon.png"
+  },
+
+  "permissions": [
+    "storage",
+    "activeTab", 
+    "scripting"
+  ],
+  
+
+  "content_scripts": [
+    {
+      "matches": ["https://adum.fr/phd/formation/catalogue.pl"],
+      "js": ["catalog_updates.js"],
+      "css": ["style.css"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "catalog@example.com"
+    }
+  }
+}

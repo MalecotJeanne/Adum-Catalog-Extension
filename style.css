@@ -1,0 +1,38 @@
+#newDiv {
+  /* Layout */
+  /* display: flex; */
+  margin: 20px auto;
+  padding: 15px 30px;
+  max-width: 50%;
+
+  /* Style */
+  background-color: #aad8a057;
+
+  /* Borders & Shadows */
+  border: 1px solid #629d55;
+}
+
+#newDiv h4 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #629d55;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#newDiv ul {
+    list-style-type: "➤ "; /* Custom bullet point */
+    padding-left: 30px;
+    margin: 0;
+
+}
+
+#newDiv li {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+#newDiv li:last-child {
+    margin-bottom: 15px;
+}
