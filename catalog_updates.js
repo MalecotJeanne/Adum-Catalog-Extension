@@ -57,11 +57,14 @@ async function injectDiv(newFormations) {
             li.appendChild(a);
             ul.appendChild(li);
         });
-
-        div.innerHTML = `<h4>${newFormations.length} nouvelles formations ajoutées :</h4>`;
+        if (newFormations.length > 1){
+            div.innerHTML = `<h4>${newFormations.length} nouvelles formations ajoutées :</h4>`;
+        } else {
+            div.innerHTML = `<h4>1 nouvelle formation ajoutée :</h4>`;
+        }
         div.appendChild(ul);
     } else {
-        div.innerHTML = `<h4>Pas de nouvelles formations aujourd'hui :(</h4>`;
+        div.innerHTML = `<h4>Pas de nouvelle formation aujourd'hui :(</h4>`;
     }
 
     container.parentNode.insertBefore(div, container);
