@@ -1,3 +1,6 @@
+// Cross-browser API wrapper
+const api = typeof browser !== "undefined" ? browser : chrome;
+
 function waitForElm(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) return resolve(document.querySelector(selector));
@@ -12,10 +15,8 @@ function waitForElm(selector) {
 }
 
 function scrollToTD(substring) {
-    // Find all td elements
     const tds = document.querySelectorAll('td');
 
-    // Find the td that contains an <a> whose text contains the substring
     const td = Array.from(tds).find(td =>
         Array.from(td.querySelectorAll('a')).some(a => 
             a.textContent.includes(substring)
@@ -24,7 +25,7 @@ function scrollToTD(substring) {
 
     if (td) {
         td.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        td.style.backgroundColor = 'yellow'; // optional highlight
+        td.style.backgroundColor = 'yellow';
         td.style.transition = 'background-color 2s ease'; 
 
         setTimeout(() => {
@@ -35,7 +36,6 @@ function scrollToTD(substring) {
     }
 }
 
-
 async function injectDiv(newFormations) {
     const container = await waitForElm("#container");
     if (document.getElementById("newDiv")) return;
@@ -45,23 +45,28 @@ async function injectDiv(newFormations) {
 
     if (newFormations.length > 0){
         const ul = document.createElement("ul");
+
         newFormations.forEach(f => {
             const li = document.createElement("li");
             const a = document.createElement("a");
             a.href = "#";
             a.textContent = f.name;
+
             a.addEventListener("click", e => {
                 e.preventDefault();
-                scrollToTD(f.name);  // works because it’s in scope
+                scrollToTD(f.name);
             });
+
             li.appendChild(a);
             ul.appendChild(li);
         });
-        if (newFormations.length > 1){
-            div.innerHTML = `<h4>${newFormations.length} nouvelles formations ajoutées :</h4>`;
-        } else {
-            div.innerHTML = `<h4>1 nouvelle formation ajoutée :</h4>`;
-        }
+
+        div.innerHTML = `<h4>${
+            newFormations.length > 1
+                ? `${newFormations.length} nouvelles formations ajoutées :`
+                : `1 nouvelle formation ajoutée :`
+        }</h4>`;
+
         div.appendChild(ul);
     } else {
         div.innerHTML = `<h4>Pas de nouvelle formation aujourd'hui :(</h4>`;
@@ -71,15 +76,11 @@ async function injectDiv(newFormations) {
     console.log("Injection complete ✅");
 }
 
-
-
 async function start() {
     console.log("Waiting for tables to load...");
     
-    // WAIT for at least one table to appear before scraping
     await waitForElm("table:not([class])");
 
-    // NOW collect the data
     const tables = Array.from(document.querySelectorAll("table:not([class])"));
     let tdList = [];
 
@@ -93,6 +94,7 @@ async function start() {
     let formations = [];
     for (let i = 0; i < textList.length; i += 6) {
         if (i + 5 >= textList.length) break;
+
         formations.push({
             name: textList[i],
             place: textList[i + 1],
@@ -103,23 +105,23 @@ async function start() {
         });
     }
 
-    // Now talk to storage
-    const result = await browser.storage.local.get("formations");
+    // Storage (works in Firefox + Chromium)
+    const result = await api.storage.local.get("formations");
     const saved = result.formations || [];
 
     const savedKeys = new Set(saved.map(f => `${f.name}|${f.place}|${f.date}`));
-    const newFormations = formations.filter(f => !savedKeys.has(`${f.name}|${f.place}|${f.date}`));
+    const newFormations = formations.filter(f => 
+        !savedKeys.has(`${f.name}|${f.place}|${f.date}`)
+    );
 
     injectDiv(newFormations);
     
     try {
-        await browser.storage.local.set({ formations: formations });
-        console.log(`Formations saved.`);
+        await api.storage.local.set({ formations: formations });
+        console.log("Formations saved.");
     } catch (err) {
         console.error("Failed to save formations:", err);
     }
-
 }
 
-// Run the script
 start();

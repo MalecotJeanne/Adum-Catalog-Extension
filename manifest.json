@@ -13,10 +13,13 @@
 
   "permissions": [
     "storage",
-    "activeTab", 
+    "activeTab",
     "scripting"
   ],
-  
+
+  "host_permissions": [
+    "https://adum.fr/*"
+  ],
 
   "content_scripts": [
     {
@@ -25,15 +28,5 @@
       "css": ["style.css"],
       "run_at": "document_idle"
     }
-  ],
-
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "adumcatalogupdates@local",
-      "strict_min_version": "140.0",
-      "data_collection_permissions": {
-        "required": ["websiteContent"]
-    }
-  }
-}
+  ]
 }
